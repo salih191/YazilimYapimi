@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\Concrete\" />
+    <Folder Include="DataAccess\EntityFramework\" />
   </ItemGroup>
 
   <ItemGroup>

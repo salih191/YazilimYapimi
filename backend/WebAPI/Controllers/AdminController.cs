@@ -18,7 +18,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getaddmoney")]
-        public IActionResult GetAaddMoney()
+        public IActionResult GetAddMoney()
         {
             var result = _addMoneyService.GetApproved();
             if (result.Success)
@@ -28,7 +28,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
         [HttpPost("confirmaddmoney")]
-        public IActionResult ConfirmAaddMoney(AddMoneyDto addMoneyDto)
+        public IActionResult ConfirmAddMoney(AddMoneyDto addMoneyDto)
         {
             var result = _addMoneyService.Confirm(addMoneyDto.AddMoneyId);
             if (result.Success)
@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
         [HttpPost("rejectaddmoney")]
-        public IActionResult RejectAaddMoney(AddMoneyDto addMoneyDto)
+        public IActionResult RejectAddMoney(AddMoneyDto addMoneyDto)
         {
             var result = _addMoneyService.Reject(addMoneyDto.AddMoneyId);
             if (result.Success)
@@ -48,7 +48,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
         [HttpGet("getaddproduct")]
-        public IActionResult GetAaddProduct()
+        public IActionResult GetAddProduct()
         {
             var result = _addProductService.GetApproved();
             if (result.Success)

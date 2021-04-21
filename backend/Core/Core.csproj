@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="CrossCuttingConcerns\Caching\Microsoft\" />
     <Folder Include="DataAccess\EntityFramework\" />
   </ItemGroup>
 

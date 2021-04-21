@@ -1,0 +1,100 @@
+<body class="text-center">
+  <main class="form-signin">
+    <form [formGroup]="registerForm">
+      <h1 class="h3 mb-3 fw-normal">Kaydol</h1>
+
+      <div class="form-floating">
+        <input
+          formControlName="firstName"
+          type="text"
+          class="form-control"
+          id="floatingInput"
+          placeholder="Salih"
+        />
+        <label for="floatingInput">İsim</label>
+      </div>
+
+      <div class="form-floating">
+        <input
+          formControlName="lastName"
+          type="text"
+          class="form-control"
+          id="floatingInput"
+          placeholder="Özkara"
+        />
+        <label for="floatingInput">Soyad</label>
+      </div>
+
+      <div class="form-floating">
+        <input
+          formControlName="userName"
+          type="text"
+          class="form-control"
+          id="floatingInput"
+          placeholder=""
+        />
+        <label for="floatingInput">Kullanıcı Adı</label>
+      </div>
+
+      <div class="form-floating">
+        <input
+          formControlName="tcIdentityNumber"
+          type="text"
+          class="form-control"
+          id="floatingInput"
+          placeholder="12345678910"
+        />
+        <label for="floatingInput">TC Kimlik Numarası</label>
+      </div>
+
+      <div class="form-floating">
+        <input
+          formControlName="phoneNumber"
+          type="text"
+          class="form-control"
+          id="floatingInput"
+          placeholder="05555555555"
+        />
+        <label for="floatingInput">Telefon Numarası</label>
+      </div>
+
+      <div class="form-floating">
+        <input
+          formControlName="email"
+          type="email"
+          class="form-control"
+          id="floatingInput"
+          placeholder="name@example.com"
+        />
+        <label for="floatingInput">Email</label>
+      </div>
+      <div class="form-floating">
+        <input
+          formControlName="password"
+          type="password"
+          class="form-control"
+          id="floatingPassword"
+          placeholder="Password"
+        />
+        <label for="floatingPassword">Parola</label>
+      </div>
+
+      <div class="form-floating">
+        <input
+          formControlName="address"
+          type="text"
+          class="form-control"
+          id="floatingPassword"
+          placeholder=""
+          rows="2"
+        />
+        <label for="floatingPassword">Adres</label>
+      </div>
+
+      <button class="w-100 btn btn-lg btn-primary" type="submit" (click)="register()">
+        Kaydol
+      </button>
+      <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+    </form>
+  </main>
+</body>

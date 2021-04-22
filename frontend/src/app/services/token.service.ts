@@ -12,21 +12,21 @@ export class TokenService {
 
   cacheKey: string = 'token';
 
-  setToken(accessToken: TokenModel) {
+  setToken(accessToken: TokenModel) {//tokeni çerezlere ekle
     this.cookieService.set(this.cacheKey,accessToken.token)
   }
 
-  getToken(): string {
+  getToken(): string {//çerezlerden getir
     let token:string=this.cookieService.get(this.cacheKey)
     return token;
   }
 
-  tokenExist(): boolean {
+  tokenExist(): boolean {//token var mı
     if (this.cookieService.get(this.cacheKey)) return true;
     else return false;
   }
 
-  delete() {
+  delete() {//çerezlerden tokeni sil
     this.cookieService.delete(this.cacheKey)
   }
 }

@@ -34,13 +34,6 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(p => p.CategoryId == categoryId));
         }
 
-        [SecuredOperation("kullanıcı")]
-        [CacheAspect()]
-        public IDataResult<List<Product>> GetAll()
-        {
-            return new SuccessDataResult<List<Product>>(_productDal.GetAll());
-        }
-
         [CacheAspect()]
         public IDataResult<List<ProductDto>> GetAllProductsDetail()
         {

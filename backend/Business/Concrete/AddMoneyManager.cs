@@ -20,37 +20,38 @@ namespace Business.Concrete
             _addMoneyDal = addMoneyDal;
         }
 
-        [SecuredOperation("kullanıcı")]
-        [ValidationAspect(typeof(AddMoneyValidator))]
-        [CacheRemoveAspect("IAddMoneyService.Get")]
-        public IResult Add(AddMoney money)
+        [SecuredOperation("kullanıcı")]//kullanıcı yetkisi olanlar erişebilir
+        [ValidationAspect(typeof(AddMoneyValidator))]//validasyon
+        [CacheRemoveAspect("IAddMoneyService.Get")]//cach siliniyor
+        public IResult Add(AddMoney money)//addMoney tablosunda adminin beklemesine gidiyor
         {
+            money.Status = false;
             _addMoneyDal.Add(money);
             return new SuccessResult("Para Admin Onayına İletildi");
         }
 
         [SecuredOperation("")]
         [CacheAspect]
-        public IDataResult<List<AddMoneyDto>> GetApproved()
+        public IDataResult<List<AddMoneyDto>> GetApproved()//onaylanacaklar çekiliyor
         {
             return new SuccessDataResult<List<AddMoneyDto>>(_addMoneyDal.GetAddMoneyDtos());
         }
 
         [SecuredOperation("")]
         [CacheRemoveAspect("IAddMoneyService.Get")]
-        public IResult Confirm(int id)
+        public IResult Confirm(int id)//id ile onaylama 
         {
-            var result = _addMoneyDal.Get(a => a.Id == id);
-            result.Status = true;
-            _addMoneyDal.Update(result);
+            var result = _addMoneyDal.Get(a => a.Id == id);//id üzerinden bilgiler çekiliyor
+            result.Status = true;//durum onaylandı yapılıyor
+            _addMoneyDal.Update(result);//veritabanına güncelleniyor veritabanındaki addMOney trigger ile işlem yapılıyor
             return new SuccessResult("onaylandı");
         }
 
         [SecuredOperation("")]
         [CacheRemoveAspect("IAddMoneyService.Get")]
-        public IResult Reject(int addMoneyId)
+        public IResult Reject(int addMoneyId)//reddetme
         {
-            _addMoneyDal.Delete(new AddMoney { Id = addMoneyId });
+            _addMoneyDal.Delete(new AddMoney { Id = addMoneyId });//tablodan siliniyor veri
             return new SuccessResult("reddedildi");
         }
     }

@@ -42,14 +42,14 @@ export class AuthService {
     );
   }
 
-  isUserHaveClaims(necessaryClaims: string[]): boolean {
+  isUserHaveClaims(necessaryClaims: string[]): boolean {//verilen role/rollere sahip mi
     if (necessaryClaims == undefined) return false;
     if(this.isAuthenticated()==false){
       return false;
     }
     let isUserHaveClaim: boolean = false;
     
-    let claims:string=JSON.parse(JSON.stringify(jwt_decode(this.tokenService.getToken()))).roles
+    let claims:string=JSON.parse(JSON.stringify(jwt_decode(this.tokenService.getToken()))).roles//jwt üzerinden decode il çekiyor
     claims.split(",").forEach((ownedClaim) => {
       console.log(claims)
       necessaryClaims.forEach((necessaryClaim) => {
@@ -61,18 +61,18 @@ export class AuthService {
     return isUserHaveClaim;
   }
 
-  isAuthenticated(): boolean {
+  isAuthenticated(): boolean {//giriş yapılı mı
     return this.tokenService.tokenExist();
   }
 
-  getUser(): User {
+  getUser(): User {//jwt içerisinden user verilerini decode etme
     let token:string=this.tokenService.getToken()
     let user: User = jwt_decode(token)
     return user;
   }
 
   logout() {
-    this.tokenService.delete();
+    this.tokenService.delete();//tokeni sil
     this.toastrService.success('Başarıyla çıkış yaptınız.');
     timer(1000).subscribe(p=>{
       window.location.reload();

@@ -1,0 +1,107 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" >Yazılım Yapımı</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div
+      *ngIf="girisYapili"
+      class="collapse navbar-collapse"
+      id="navbarSupportedContent"
+    >
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link btn"  data-bs-toggle="modal" data-bs-target="#productModel">Ürün Ekle</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link btn"  data-bs-toggle="modal" data-bs-target="#moneyAddModal">Para Ekle</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link btn" data-bs-toggle="modal" data-bs-target="#orderAddModal">Ürün Satın Al</a>
+        </li>
+        <li class="nav-item" *ngIf="admin" class="dropdown">
+          <button
+          *ngIf="onaylanacakVarmi"
+            class="btn btn-light dropdown-toggle nav-link"
+            type="button"
+            id="accountMenu"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Onaylanacaklar
+          </button>
+        
+          <ul class="dropdown-menu px-auto" aria-labelledby="accountMenu">
+            <li>
+              <a
+                *ngFor="let product of onaybekleyenUrun"
+                class="dropdown-item"
+                >ürün:{{ product.categoryName }} satıcı:{{
+                  product.supplierUserName
+                }}
+                miktar:{{ product.quantity }} fiyat:{{ (product.unitsInPrice | currency) | replace:'$':'₺'}}
+                <span class="badge bg-success btn" (click)="confirmProduct(product)">✓</span>
+                <span class="badge bg-danger btn"  (click)="rejectProduct(product)">X</span></a
+                
+              >
+            </li>
+            <li>
+              <a
+                *ngFor="let wallet of onaybekleyenPara"
+                class="dropdown-item"
+                >üye:{{ wallet.userName }} miktar:{{ (wallet.amount | currency) | replace:'$':'₺'}}
+                <span class="badge bg-success btn" (click)="confirmMoney(wallet)">✓</span>
+                <span class="badge bg-danger btn"  (click)="rejectMoney(wallet)">X</span></a
+              >
+            </li>
+          </ul>
+        </li> 
+      </ul>
+      <div>Para : {{ (wallet | currency) | replace : '$' : '₺'}}</div>
+      <div class="dropdown px-4">
+        <button
+          class="btn btn-light dropdown-toggle"
+          type="button"
+          id="accountMenu"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ user.userName }}
+        </button>
+        <ul class="dropdown-menu px-auto" aria-labelledby="accountMenu">
+          <li><a (click)="logOut()" class="dropdown-item btn">Log out</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      *ngIf="!girisYapili"
+      class="d-flex justify-content-center order-0 order-lg-1"
+    >
+      <a
+        class="btn mx-2 py-2 px-4 rounded-1 bg-transparent"
+        routerLink="register"
+        >Sign Up</a
+      >
+      <a
+        class="btn btn-primary mx-2 py-2 px-4 rounded-1 shadow"
+        routerLink="login"
+        >Log in</a
+      >
+    </div>
+  </div>
+</nav>
+
+
+<app-category-add></app-category-add>
+<app-money-add></app-money-add>
+<app-order-add></app-order-add>
+<app-product-add></app-product-add>

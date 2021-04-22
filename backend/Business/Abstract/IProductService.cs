@@ -9,7 +9,6 @@ namespace Business.Abstract
     {
         IResult Update(Product product);
         IDataResult<List<Product>> GetByCategoryId(int categoryId);
-        IDataResult<List<Product>> GetAll();
         IDataResult<List<ProductDto>> GetAllProductsDetail();
     }
 }

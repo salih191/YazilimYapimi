@@ -17,7 +17,7 @@ export class RegisterComponent implements OnInit {
     private router:Router) { }
 
   ngOnInit(): void {
-    if(this.authService.isAuthenticated())
+    if(this.authService.isAuthenticated())//giriş yapılı mı
     {
       this.router.navigate([""])
     }
@@ -43,9 +43,6 @@ export class RegisterComponent implements OnInit {
       this.authService.register(registerDto).subscribe(response=>{
         this.tokenService.setToken(response.data);
         this.toastrService.success(response.message);
-        /*timer(5000).subscribe(p=>{
-          window.location.reload();
-        });*/
         window.history.replaceState({},'',"")
         window.history.go(0)
         
@@ -56,7 +53,6 @@ export class RegisterComponent implements OnInit {
     }
     else{
       this.toastrService.warning('Lütfen gerekli alanları istenilen biçimde doldurunuz.','Model Doğrulama Uyarısı');
-      //console.log(this.registerForm)
     }
   }
 }

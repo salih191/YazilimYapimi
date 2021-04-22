@@ -36,7 +36,7 @@ namespace Core.Extensions
 
             string message = "Internal Server Error :" + e.Message;
             IEnumerable<ValidationFailure> validationErrors;
-            if (e.GetType() == typeof(ValidationException))
+            if (e.GetType() == typeof(ValidationException))//hata tipi validasyon ise
             {
                 message = e.Message;
                 validationErrors = ((ValidationException)e).Errors;

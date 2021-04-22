@@ -32,44 +32,45 @@ namespace Business.Concrete
         [CacheRemoveAspect("IOrderService.Get")]
         public IResult Add(Order order)
         {
-            var result = _productService.GetByCategoryId(order.CategoryId).Data.OrderBy(p => p.UnitPrice).ToList();
-            result = result.Where(p => p.SupplierId != order.CustomerId).ToList();
-            var quantity = order.Quantity;
-            decimal sumAddQuantity = 0;
-            var customerWallet = _walletService.GetByUserId(order.CustomerId).Data;
-            List<OrderDetail> orderDetails = new List<OrderDetail>();
+            var result = _productService.GetByCategoryId(order.CategoryId).Data.OrderBy(p => p.UnitPrice).ToList();//ürünler fiyata göre küçükten büyüğe listeleniyor
+            result = result.Where(p => p.SupplierId != order.CustomerId).ToList();//satıcının kendi ürünleri çıkarılıyor listeden
+            var quantity = order.Quantity;//istediği ürün miktarı
+            decimal sumAddQuantity = 0;//ne kadar ürün verdik
+            var customerWallet = _walletService.GetByUserId(order.CustomerId).Data;//alıcı cüzdan bilgileri çekiliyor
+            List<OrderDetail> orderDetails = new List<OrderDetail>();//oluşucak sipariş detaylarını tutacak liste
             foreach (var product in result)
             {
-                var supplierWallet = _walletService.GetByUserId(product.SupplierId).Data;
+                var supplierWallet = _walletService.GetByUserId(product.SupplierId).Data;//satıcı cüzdanı
                 var canAfford = customerWallet.Amount / product.UnitPrice;//alıcının parası kaç ürüne yetiyor
                 var canTake = canAfford > product.Quantity ? product.Quantity : canAfford;//bu üründen ne kadar alabilir
                 var addQuantity = canTake > (quantity - sumAddQuantity) ? (quantity - sumAddQuantity) : canTake;//alınan ürün miktarı
-                supplierWallet.Amount += addQuantity * product.UnitPrice;//satıcıya para eklenmesi
-                customerWallet.Amount -= addQuantity * product.UnitPrice;//alıcıdan para çıkması
-                sumAddQuantity += addQuantity;
-                _walletService.Update(supplierWallet);
-                _walletService.Update(customerWallet);
-                product.Quantity -= addQuantity;//product quantity eksilmesi
-                _productService.Update(product);
-                if (addQuantity > 0)
+                
+                if (addQuantity > 0)//ürün verildiyse
                 {
-                    orderDetails.Add(new OrderDetail { ProductId = product.Id, Quantity = addQuantity });
+                    supplierWallet.Amount += addQuantity * product.UnitPrice;//satıcıya para eklenmesi
+                    customerWallet.Amount -= addQuantity * product.UnitPrice;//alıcıdan para çıkması
+                    sumAddQuantity += addQuantity;//verilen miktar tüm verilene ekleniyor
+                    _walletService.Update(supplierWallet);//cüzdan güncelleniyor
+                    _walletService.Update(customerWallet);//cüzdan güncelleniyor
+                    product.Quantity -= addQuantity;//verilen ürün miktarı düşülüyor
+                    _productService.Update(product);//ürün güncelleniyor
+                    orderDetails.Add(new OrderDetail { ProductId = product.Id, Quantity = addQuantity });//detay oluşuyor
                 }
-                if (quantity == sumAddQuantity)
+                if (quantity == sumAddQuantity)//istediği kadar verdiysek döngü sonlanıyor
                 {
                     break;
                 }
             }
-            if (sumAddQuantity > 0)
+            if (sumAddQuantity > 0)//ürün verildiyse order oluşuyor
             {
                 order.Quantity = sumAddQuantity;
                 order.OrderDate = DateTime.Now;
                 _orderDal.Add(order);
-                foreach (var orderDetail in orderDetails)
+                foreach (var orderDetail in orderDetails)//order detailse order id ekleniyor
                 {
                     orderDetail.OrderId = order.Id;
                 }
-                _orderDetailService.AddList(orderDetails);
+                _orderDetailService.AddList(orderDetails);//order details liste olarak ekleniyor
                 string mesaj = sumAddQuantity + " ürün satın alımı gerçekleşti." + ((sumAddQuantity < quantity) ? " İşlem eksik tamamlandı" : "");
                 return new SuccessResult(mesaj);
             }

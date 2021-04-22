@@ -39,12 +39,11 @@ export class LoginComponent implements OnInit {
     if(this.loginForm.valid){
       let loginDto : LoginModel = this.loginForm.value;
       this.authService.login(loginDto).subscribe(response=>{
-        this.tokenService.setToken(response.data);
+        this.tokenService.setToken(response.data);//token service üzerinden kayıt ediliyor
         this.toastrService.success(response.message);
         window.history.replaceState({},'',"")
         window.history.go(0)
       }, errorResponse=>{
-        console.log(errorResponse)
         this.toastrService.error(errorResponse.error, 'Hata');
       });
     }
@@ -54,7 +53,7 @@ export class LoginComponent implements OnInit {
   }
 
   register(){
-    this.router.navigate(["register"]);
+    this.router.navigate(["register"]);//register a yönlendiriyor
   }
   
 }

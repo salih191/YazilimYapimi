@@ -21,7 +21,7 @@ namespace Core.DataAccess.EntityFramework
             }
         }
 
-        public void AddList(List<TEntity> entities)
+        public void AddList(List<TEntity> entities)//listeyi veri tabanına bir kerede ekleme
         {
             using (TContext context = new TContext())
             {

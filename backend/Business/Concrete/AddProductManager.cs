@@ -23,7 +23,7 @@ namespace Business.Concrete
         [SecuredOperation("kullanıcı")]
         [ValidationAspect(typeof(AddProductValidator))]
         [CacheRemoveAspect("IAddProductService.Get")]
-        public IResult Add(AddProduct product)
+        public IResult Add(AddProduct product)//addproduct tablosunda adminin beklemesine gidiyor
         {
             product.Status = false;
             _addProductDal.Add(product);

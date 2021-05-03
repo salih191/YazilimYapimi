@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -22,6 +23,7 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        [SecuredOperation("")]
         public IDataResult<List<OrderDetailsDto>> GetOrderDetailsDtos()
         {
             return new SuccessDataResult<List<OrderDetailsDto>>(_orderDetailDal.getAllDetailsDtos());

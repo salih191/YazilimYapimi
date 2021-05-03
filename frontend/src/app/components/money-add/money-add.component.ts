@@ -36,7 +36,6 @@ export class MoneyAddComponent implements OnInit {
       let moneyModel = Object.assign({}, this.moneyAddForm.value);
       this.walletService.addWallet(moneyModel).subscribe(
         (data) => {
-          window.location.reload()
           this.toastrService.success(data.message, 'Başarılı')
         },
         (dataError) => {

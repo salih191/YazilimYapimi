@@ -63,7 +63,6 @@ export class ProductAddComponent implements OnInit {
       console.log(productModel);
       this.productService.addProducts(productModel).subscribe(
         (data) => {
-          window.location.reload()
           this.toastrService.success(data.message, 'Başarılı');
         },
         (dataError) => {

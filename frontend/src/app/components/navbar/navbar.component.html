@@ -39,7 +39,7 @@
             Onaylanacaklar
           </button>
         
-          <ul class="dropdown-menu px-auto" aria-labelledby="accountMenu">
+          <ul class="dropdown-menu px-auto " aria-labelledby="confirmationMenu">
             <li>
               <a
                 *ngFor="let product of onaybekleyenUrun"
@@ -66,7 +66,7 @@
         </li> 
       </ul>
       <div>Para : {{ (wallet | currency) | replace : '$' : '₺'}}</div>
-      <div class="dropdown px-4">
+      <div class="dropdown px-4 ">
         <button
           class="btn btn-light dropdown-toggle"
           type="button"

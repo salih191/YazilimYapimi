@@ -92,7 +92,7 @@ export class NavbarComponent implements OnInit {
     this.adminService.confirmAddMoney(wallet).subscribe(
       (response) => {
        this.onaybekleyenPara=this.onaybekleyenPara.filter(w=>w!=wallet)
-       this.wallet+=wallet.amount
+       window.location.reload()
       },
       (erorrResponse) => {
         console.log(erorrResponse);

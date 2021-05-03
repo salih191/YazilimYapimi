@@ -31,7 +31,7 @@
           type="text"
           class="form-control"
           id="floatingInput"
-          placeholder=""
+          placeholder="userName"
         />
         <label for="floatingInput">Kullanıcı Adı</label>
       </div>
@@ -78,23 +78,21 @@
         />
         <label for="floatingPassword">Parola</label>
       </div>
-
       <div class="form-floating">
         <input
           formControlName="address"
           type="text"
           class="form-control"
-          id="floatingPassword"
-          placeholder=""
-          rows="2"
+          id="floatingInput"
+          placeholder="adresim"
         />
-        <label for="floatingPassword">Adres</label>
+        <label for="floatingInput">Adres</label>
       </div>
 
       <button class="w-100 btn btn-lg btn-primary" type="submit" (click)="register()">
         Kaydol
       </button>
-      <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+      
     </form>
   </main>
 </body>

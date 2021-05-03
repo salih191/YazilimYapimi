@@ -47,7 +47,7 @@
                 >ürün:{{ product.categoryName }} satıcı:{{
                   product.supplierUserName
                 }}
-                miktar:{{ product.quantity }} fiyat:{{ (product.unitsInPrice | currency) | replace:'$':'₺'}}
+                miktar:{{ product.quantity }} kg fiyat:{{ (product.unitsInPrice | currency) | replace:'$':'₺'}}
                 <span class="badge bg-success btn" (click)="confirmProduct(product)">✓</span>
                 <span class="badge bg-danger btn"  (click)="rejectProduct(product)">X</span></a
                 

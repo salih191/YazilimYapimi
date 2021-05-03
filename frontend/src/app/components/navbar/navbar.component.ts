@@ -39,7 +39,7 @@ export class NavbarComponent implements OnInit {
         }
       );
       if (this.admin) {//adminse onaylanacakları getir
-        this.adminService.getAaddMoney().subscribe(
+        this.adminService.getAddMoney().subscribe(
           (response) => {
             this.onaybekleyenPara = response.data;
             if(response.data.length>0)
@@ -49,9 +49,8 @@ export class NavbarComponent implements OnInit {
             console.log(errorResponse);
           }
         );
-        this.adminService.getAaddProduct().subscribe(
+        this.adminService.getAddProduct().subscribe(
           (response) => {
-            console.log(response);
             this.onaybekleyenUrun = response.data;
             if(response.data.length>0)
             this.onaylanacakVarmi=true
@@ -68,9 +67,9 @@ export class NavbarComponent implements OnInit {
     this.authService.logout();
   }
   confirmProduct(product: ProductDto) {
-    console.log(product);
-    this.adminService.confirmAaddProduct(product).subscribe(
+    this.adminService.confirmAddProduct(product).subscribe(
       (response) => {
+        
         window.location.reload();
       },
       (erorrResponse) => {
@@ -79,10 +78,9 @@ export class NavbarComponent implements OnInit {
     );
   }
   rejectProduct(product: ProductDto) {
-    console.log(product);
-    this.adminService.rejectAaddProduct(product).subscribe(
+    this.adminService.rejectAddProduct(product).subscribe(
       (response) => {
-        window.location.reload();
+        this.onaybekleyenUrun=this.onaybekleyenUrun.filter(p=>p!=product)
       },
       (erorrResponse) => {
         console.log(erorrResponse);
@@ -91,9 +89,10 @@ export class NavbarComponent implements OnInit {
   }
 
   confirmMoney(wallet: WalletDto) {
-    this.adminService.confirmAaddMoney(wallet).subscribe(
+    this.adminService.confirmAddMoney(wallet).subscribe(
       (response) => {
-        window.location.reload();
+       this.onaybekleyenPara=this.onaybekleyenPara.filter(w=>w!=wallet)
+       this.wallet+=wallet.amount
       },
       (erorrResponse) => {
         console.log(erorrResponse);
@@ -101,9 +100,9 @@ export class NavbarComponent implements OnInit {
     );
   }
   rejectMoney(wallet: WalletDto) {
-    this.adminService.rejectAaddMoney(wallet).subscribe(
+    this.adminService.rejectAddMoney(wallet).subscribe(
        (response) => {
-        window.location.reload();
+        this.onaybekleyenPara=this.onaybekleyenPara.filter(w=>w!=wallet)
       },
       (erorrResponse) => {
         console.log(erorrResponse);

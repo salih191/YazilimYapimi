@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 import { WalletService } from 'src/app/services/wallet.service';
@@ -16,7 +17,8 @@ export class MoneyAddComponent implements OnInit {
     private formBuilder: FormBuilder,
     private walletService: WalletService,
     private toastrService: ToastrService,
-    private authService:AuthService
+    private authService:AuthService,
+    private router:Router
   ) {}
 
   ngOnInit(): void {
@@ -34,8 +36,8 @@ export class MoneyAddComponent implements OnInit {
       let moneyModel = Object.assign({}, this.moneyAddForm.value);
       this.walletService.addWallet(moneyModel).subscribe(
         (data) => {
-          
-          this.toastrService.success(data.message, 'Başarılı');
+          window.location.reload()
+          this.toastrService.success(data.message, 'Başarılı')
         },
         (dataError) => {
           if(dataError.error.ValidationErrors.length>0){

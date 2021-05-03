@@ -9,7 +9,7 @@
       <table *ngIf="dataLoaded == true" class="table">
         <thead>
           <tr>
-            <th>Id</th>
+            <th></th>
             <th>Kategori</th>
             <th>Miktar</th>
             <th>Fiyat</th>
@@ -18,7 +18,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let product of products">
-            <td>{{ product.productId }}</td>
+            <td></td>
             <td>{{ product.categoryName }}</td>
             <td>{{ product.quantity | number }} kg</td>
             <td>{{ product.unitsInPrice | currency | replace: "$":"₺" }}</td>

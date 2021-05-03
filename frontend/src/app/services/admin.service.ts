@@ -16,23 +16,23 @@ export class AdminService {
 
   constructor(private httpClient: HttpClient) { }
 
-    getAaddMoney():Observable<ListResponseModel<WalletDto>>{
+    getAddMoney():Observable<ListResponseModel<WalletDto>>{
       return this.httpClient.get<ListResponseModel<WalletDto>>(ApiUrlHelper.getUrl("admin/getaddmoney"))
     }
-    confirmAaddMoney(addMoney:WalletDto):Observable<ResponseModel>{
+    confirmAddMoney(addMoney:WalletDto):Observable<ResponseModel>{
       return this.httpClient.post<ListResponseModel<WalletDto>>(ApiUrlHelper.getUrl("admin/confirmaddmoney"),addMoney)
     }
-    rejectAaddMoney(addMoney:WalletDto):Observable<ResponseModel>{
+    rejectAddMoney(addMoney:WalletDto):Observable<ResponseModel>{
       return this.httpClient.post<ListResponseModel<WalletDto>>(ApiUrlHelper.getUrl("admin/rejectaddmoney"),addMoney)
     }
 
-    getAaddProduct():Observable<ListResponseModel<ProductDto>>{
+    getAddProduct():Observable<ListResponseModel<ProductDto>>{
       return this.httpClient.get<ListResponseModel<ProductDto>>(ApiUrlHelper.getUrl("admin/getaddproduct"))
     }
-    confirmAaddProduct(addProduct:ProductDto):Observable<ResponseModel>{
+    confirmAddProduct(addProduct:ProductDto):Observable<ResponseModel>{
       return this.httpClient.post<ListResponseModel<Product>>(ApiUrlHelper.getUrl("admin/confirmaddproduct"),addProduct)
     }
-    rejectAaddProduct(addProduct:ProductDto):Observable<ResponseModel>{
+    rejectAddProduct(addProduct:ProductDto):Observable<ResponseModel>{
       return this.httpClient.post<ListResponseModel<Product>>(ApiUrlHelper.getUrl("admin/rejectaddproduct"),addProduct)
     }
 }

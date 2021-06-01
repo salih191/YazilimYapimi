@@ -30,7 +30,7 @@ namespace Business.Concrete
         [SecuredOperation("kullanıcı")]
         [ValidationAspect(typeof(OrderValidator))]
         [CacheRemoveAspect("IOrderService.Get")]
-        public IResult Add(Order order)
+        public IResult OldAdd(Order order)
         {
             var result = _productService.GetByCategoryId(order.CategoryId).Data.OrderBy(p => p.UnitPrice).ToList();//ürünler fiyata göre küçükten büyüğe listeleniyor
             result = result.Where(p => p.SupplierId != order.CustomerId).ToList();//satıcının kendi ürünleri çıkarılıyor listeden
@@ -44,7 +44,7 @@ namespace Business.Concrete
                 var canAfford = customerWallet.Amount / product.UnitPrice;//alıcının parası kaç ürüne yetiyor
                 var canTake = canAfford > product.Quantity ? product.Quantity : canAfford;//bu üründen ne kadar alabilir
                 var addQuantity = canTake > (quantity - sumAddQuantity) ? (quantity - sumAddQuantity) : canTake;//alınan ürün miktarı
-                
+
                 if (addQuantity > 0)//ürün verildiyse
                 {
                     supplierWallet.Amount += addQuantity * product.UnitPrice;//satıcıya para eklenmesi
@@ -75,6 +75,120 @@ namespace Business.Concrete
                 return new SuccessResult(mesaj);
             }
             return new ErrorResult("satın alım gerçekleşemedi");
+        }
+
+        public IResult Update(Order order, List<Product> products)
+        {
+            var customerWallet = _walletService.GetByUserId(order.CustomerId).Data;
+            decimal quantity = order.Quantity;
+            if (customerWallet.Amount >= order.Quantity * order.UnitPrice)
+            {
+                var orderDetails = OrderControl(ref order, products, customerWallet);
+                order.OrderPending = false;
+                _orderDal.Update(order);
+
+                if (quantity != order.Quantity)
+                {
+                    var newOrder = order;
+                    newOrder.Quantity = quantity - order.Quantity;
+                    newOrder.OrderPending = true;
+                    newOrder.Id = 0;
+                    _orderDal.Add(newOrder);
+                }
+                _orderDetailService.AddList(orderDetails.Data);
+                return new SuccessResult();
+            }
+
+            return new ErrorResult();
+        }
+
+        public IResult Add(Order order)
+        {
+            var quantity = order.Quantity;
+            var result = _productService.GetByCategoryId(order.CategoryId).Data.OrderBy(p => p.UnitPrice).ToList();//ürünler fiyata göre küçükten büyüğe listeleniyor
+            result = result.Where(p => p.SupplierId != order.CustomerId && p.UnitPrice == order.UnitPrice).ToList();
+            var customerWallet = _walletService.GetByUserId(order.CustomerId).Data;
+            var orderDetails = OrderControl(ref order, result, customerWallet);
+            if (orderDetails.Success)
+            {
+
+                order.OrderDate = DateTime.Now;
+                order.OrderPending = false;
+                _orderDal.Add(order);
+
+                if (quantity != order.Quantity)
+                {
+                    var newOrder = order;
+                    newOrder.Quantity = quantity - order.Quantity;
+                    newOrder.OrderPending = true;
+                    newOrder.Id = 0;
+                    _orderDal.Add(newOrder);
+                }
+                foreach (var item in orderDetails.Data)
+                {
+                    item.OrderId = order.Id;
+                }
+                _orderDetailService.AddList(orderDetails.Data);
+                return new SuccessResult();
+            }
+            else
+            {
+                order.OrderDate = DateTime.Now;
+                order.OrderPending = true;
+                _orderDal.Add(order);
+            }
+            return new ErrorResult();
+        }
+
+        private IDataResult<List<OrderDetail>> OrderControl(ref Order order, List<Product> products, Wallet customerWallet)
+        {
+            var orderquantity = order.Quantity; //bu kadar ürün almak istiyorum 
+            List<OrderDetail> orderDetails = new List<OrderDetail>();
+
+            foreach (var product in products)
+            {
+                var canbuy = product.Quantity > orderquantity ? (orderquantity) : (product.Quantity); //alabilceğim ürün
+                var purchased = customerWallet.Amount >= fiyatartiYuzdebir(canbuy * product.UnitPrice)
+                    ? canbuy
+                    : (customerWallet.Amount / fiyatartiYuzdebir(product.UnitPrice)); //verilen ürün
+                orderquantity -= purchased;
+
+                if (purchased > 0)
+                {
+                    var supplierWallet = _walletService.GetByUserId(product.SupplierId).Data;
+                    customerWallet.Amount -= purchased * product.UnitPrice;
+                    supplierWallet.Amount += purchased * product.UnitPrice;
+                    _walletService.Update(supplierWallet);
+                    _walletService.Update(customerWallet);
+                    product.Quantity -= purchased;
+                    _productService.Update(product);
+                    orderDetails.Add(new OrderDetail { OrderId = order.Id, ProductId = product.Id, Quantity = purchased, OrderDate = DateTime.Now });
+                }
+
+                if (orderquantity == 0)
+                {
+                    break;
+                }
+            }
+
+            if (orderquantity != order.Quantity)
+            {
+                order.Quantity -= orderquantity;
+                return new SuccessDataResult<List<OrderDetail>>(orderDetails);
+            }
+
+            return new ErrorDataResult<List<OrderDetail>>();
+        }
+        public IDataResult<List<Order>> GetByCategoryIdPendingOrders(int categoryId)
+        {
+            var result = _orderDal.GetAll(o => o.OrderPending == true && o.CategoryId == categoryId);
+            return new SuccessDataResult<List<Order>>(result);
+        }
+
+        decimal fiyatartiYuzdebir(decimal fiyat)
+        {
+            decimal yuzdebir = fiyat / 100;
+            return fiyat + yuzdebir;
         }
     }
 }

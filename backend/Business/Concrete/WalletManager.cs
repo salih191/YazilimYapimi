@@ -21,7 +21,14 @@ namespace Business.Concrete
             _walletDal.Update(wallet);
             return new SuccessResult();
         }
-
+        [SecuredOperation("kullanıcı")]
+        public IResult AddMoney(Wallet wallet)
+        {
+            var result = _walletDal.Get(w => w.UserId == wallet.UserId);
+            result.Amount += wallet.Amount;
+            _walletDal.Update(result);
+            return new SuccessResult();
+        }
 
         [SecuredOperation("kullanıcı")]
         public IDataResult<Wallet> GetByUserId(int userId)

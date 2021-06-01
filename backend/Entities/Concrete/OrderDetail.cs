@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using System;
+using Core.Entities;
 
 namespace Entities.Concrete
 {
@@ -8,5 +9,6 @@ namespace Entities.Concrete
         public int OrderId { get; set; }
         public int ProductId { get; set; }
         public decimal Quantity { get; set; }
+        public DateTime OrderDate { get; set; }
     }
 }

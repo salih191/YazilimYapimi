@@ -41,6 +41,8 @@ namespace Business.DependencyResolvers.Autofac
             //category
             builder.RegisterType<CategoryManager>().As<ICategoryService>();
             builder.RegisterType<EfCategoryDal>().As<ICategoryDal>();
+            //want
+            builder.RegisterType<WantManager>().As<IWantService>();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

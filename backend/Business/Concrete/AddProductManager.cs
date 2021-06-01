@@ -14,10 +14,14 @@ namespace Business.Concrete
     public class AddProductManager : IAddProductService
     {
         private IAddProductDal _addProductDal;
+        private IProductService _productService;
+        private IWantService _wantService;
 
-        public AddProductManager(IAddProductDal addProductDal)
+        public AddProductManager(IAddProductDal addProductDal, IProductService productService, IWantService wantService)
         {
             _addProductDal = addProductDal;
+            _productService = productService;
+            _wantService = wantService;
         }
 
         [SecuredOperation("kullanıcı")]
@@ -41,11 +45,33 @@ namespace Business.Concrete
         [SecuredOperation("")]
         [CacheRemoveAspect("IProductService.Get")]
         [CacheRemoveAspect("IAddProductService.Get")]
-        public IResult Confirm(int addProductId)
+        public IResult Confirm(AddProductDto addProductDto)
         {
-            var result = _addProductDal.Get(a => a.Id == addProductId);
+            var result = _addProductDal.Get(a => a.Id == addProductDto.AddProductId);
+
+            if (result.Status)
+            {
+                return new ErrorResult();
+            }
             result.Status = true;
-            _addProductDal.Update(result);
+            var product = _productService.IsThereAnyProduct(result).Data;
+            if (product != null)
+            {
+                product.Quantity += result.Quantity;
+                _productService.Update(product);
+                //_addProductDal.Update(result);
+            }
+            else
+            {
+                _productService.Add(new Product
+                {
+                    Quantity = result.Quantity,
+                    UnitPrice = addProductDto.UnitsInPrice,
+                    SupplierId = result.SupplierId,
+                    CategoryId = result.CategoryId
+                });
+            }
+            _wantService.Want(product);
             return new SuccessResult("onaylandı");
         }
 

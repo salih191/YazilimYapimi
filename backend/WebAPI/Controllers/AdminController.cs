@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
         [HttpPost("confirmaddproduct")]
         public IActionResult ConfirmAaddProduct(AddProductDto addProductDto)
         {
-            var result = _addProductService.Confirm(addProductDto.AddProductId);
+            var result = _addProductService.Confirm(addProductDto);
             if (result.Success)
             {
                 return Ok(result);

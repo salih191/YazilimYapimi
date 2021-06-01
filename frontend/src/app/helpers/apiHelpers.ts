@@ -1,7 +1,7 @@
 import { Dictionary } from "../models/dictionary";
 
 export class ApiUrlHelper {
-    static apiUrl:string="https://localhost:44343/"
+    static apiUrl:string="https://yazilimyapimi.somee.com/"
     static apiPrefix:string="api/"
     static getUrl(path: string): string {
       return this.apiUrl + this.apiPrefix + path;

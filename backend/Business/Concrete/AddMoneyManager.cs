@@ -14,10 +14,12 @@ namespace Business.Concrete
     public class AddMoneyManager : IAddMoneyService
     {
         private IAddMoneyDal _addMoneyDal;
+        private IWalletService _walletService;
 
-        public AddMoneyManager(IAddMoneyDal addMoneyDal)
+        public AddMoneyManager(IAddMoneyDal addMoneyDal, IWalletService walletService)
         {
             _addMoneyDal = addMoneyDal;
+            _walletService = walletService;
         }
 
         [SecuredOperation("kullanıcı")]//kullanıcı yetkisi olanlar erişebilir
@@ -39,11 +41,16 @@ namespace Business.Concrete
 
         [SecuredOperation("")]
         [CacheRemoveAspect("IAddMoneyService.Get")]
-        public IResult Confirm(int id)//id ile onaylama 
+        public IResult Confirm(AddMoney addMoney)//id ile onaylama 
         {
-            var result = _addMoneyDal.Get(a => a.Id == id);//id üzerinden bilgiler çekiliyor
+            var result = _addMoneyDal.Get(a => a.Id == addMoney.Id);//id üzerinden bilgiler çekiliyor
+            if (result.Status)
+            {
+                return new ErrorResult();
+            }
             result.Status = true;//durum onaylandı yapılıyor
-            _addMoneyDal.Update(result);//veritabanına güncelleniyor veritabanındaki addMOney trigger ile işlem yapılıyor
+            _addMoneyDal.Update(result);
+            _walletService.AddMoney(new Wallet {Amount = addMoney.Amount, UserId = addMoney.UserId});
             return new SuccessResult("onaylandı");
         }
 

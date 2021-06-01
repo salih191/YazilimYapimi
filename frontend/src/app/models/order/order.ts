@@ -4,4 +4,5 @@ export interface Order{
     orderDate:Date
     categoryId:number
     quantity:number
+    unitPrice:number
 }

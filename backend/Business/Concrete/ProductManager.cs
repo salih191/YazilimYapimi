@@ -12,10 +12,17 @@ namespace Business.Concrete
     public class ProductManager : IProductService
     {
         private IProductDal _productDal;
-
         public ProductManager(IProductDal productDal)
         {
             _productDal = productDal;
+        }
+
+        [SecuredOperation("kullanıcı")]
+        [CacheRemoveAspect("IProductService.Get")]
+        public IResult Add(Product product)
+        {
+            _productDal.Add(product);
+            return new SuccessResult();
         }
 
         [SecuredOperation("kullanıcı")]
@@ -25,7 +32,14 @@ namespace Business.Concrete
             _productDal.Update(product);
             return new SuccessResult();
         }
-
+        public IDataResult<Product> IsThereAnyProduct(AddProduct addProduct)
+        {
+            return new SuccessDataResult<Product>(_productDal.Get(p => 
+                p.CategoryId == addProduct.CategoryId &&
+                p.SupplierId == addProduct.SupplierId&&
+                p.UnitPrice==addProduct.UnitPrice)
+            );
+        }
 
         [SecuredOperation("kullanıcı")]
         [CacheAspect()]

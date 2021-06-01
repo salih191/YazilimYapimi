@@ -9,7 +9,7 @@ namespace Business.Abstract
     {
         IResult Add(AddProduct product);
         IDataResult<List<AddProductDto>> GetApproved();
-        IResult Confirm(int addProductId);
+        IResult Confirm(AddProductDto addProductDto);
         IResult Reject(int addProductId);
     }
 }

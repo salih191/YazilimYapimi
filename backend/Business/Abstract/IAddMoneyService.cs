@@ -8,9 +8,8 @@ namespace Business.Abstract
     public interface IAddMoneyService
     {
         IResult Add(AddMoney money);
-        IResult Confirm(AddMoney addMoney);
+        IResult Confirm(AddMoneyDto addMoneyDto);
         IDataResult<List<AddMoneyDto>> GetApproved();
-        IResult Confirm(int addMoneyId);
         IResult Reject(int addMoneyId);
     }
 }

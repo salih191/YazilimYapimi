@@ -15,12 +15,14 @@ namespace DataAccess.Concrete
             {
                 var result = from addMoney in context.AddMoney
                     join user in context.Users on addMoney.UserId equals user.Id
+                    join currency in context.Currencies on addMoney.CurrencyId equals currency.Id 
                     where addMoney.Status == false
                     select new AddMoneyDto
                     {
                         AddMoneyId = addMoney.Id,
                         Amount = addMoney.Amount,
-                        UserName = user.UserName
+                        UserName = user.UserName,
+                        CurrencyType = currency.CurrencyType
                     };
                 return result.ToList();
             }

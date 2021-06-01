@@ -23,5 +23,6 @@ namespace DataAccess.Concrete
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<AddMoney> AddMoney { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
     }
 }

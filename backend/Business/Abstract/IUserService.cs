@@ -12,5 +12,6 @@ namespace Business.Abstract
         IDataResult<User> GetByUserName(string userName);
         IResult Update(User user);
         IDataResult<User> GetById(int userId);
+        IDataResult<User> GetMuhasabeci();
     }
 }

@@ -40,6 +40,7 @@ export class OrderAddComponent implements OnInit {
       categoryId: ['', Validators.required],
       quantity: ['', Validators.required],
       customerId: Number(this.authService.getUser().id),
+      unitPrice:['',Validators.required]
     });
   }
 

@@ -29,5 +29,17 @@ namespace DataAccess.Concrete
                 context.SaveChanges();
             }
         }
+
+        public User GetMuhasabeci()
+        {
+            using (var context = new YazilimYapimiContext())
+            {
+                var result = from uso in context.UserOperationClaims
+                    join User in context.Users on uso.UserId equals User.Id
+                    where uso.OperationClaimId == 4
+                             select User;
+                return result.FirstOrDefault();
+            }
+        }
     }
 }

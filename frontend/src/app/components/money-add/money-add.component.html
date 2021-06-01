@@ -33,6 +33,23 @@
                   />
                 </div>
               </div>
+              <div class="mb-3">
+                <label>Para Birimi</label>
+                <div class="form-group">
+                  <select
+                    class="form-select"
+                    formControlName="currencyId"
+                    aria-label="Default select example"
+                  >
+                    <option
+                      *ngFor="let currency of currencies"
+                      [value]="currency.id"
+                    >
+                      {{ currency.currencyType }}
+                    </option>
+                  </select>
+                </div>
+              </div>
             </form>
           </div>
         </div>
@@ -44,11 +61,15 @@
           >
             Vazgeç
           </button>
-          <button class="btn btn-primary" (click)="add()" data-bs-dismiss="modal">Ekle</button>
+          <button
+            class="btn btn-primary"
+            (click)="add()"
+            data-bs-dismiss="modal"
+          >
+            Ekle
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-

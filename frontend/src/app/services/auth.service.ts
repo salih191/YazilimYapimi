@@ -50,7 +50,7 @@ export class AuthService {
     let isUserHaveClaim: boolean = false;
     
     let claims:string=JSON.parse(JSON.stringify(jwt_decode(this.tokenService.getToken()))).roles//jwt üzerinden decode ile çekiyor
-    claims.split(",").forEach((ownedClaim) => {//string olarak gelen rolleri virgül ile ayırıp rol karşılaştırıyor
+    claims.toString().split(",").forEach((ownedClaim) => {//string olarak gelen rolleri virgül ile ayırıp rol karşılaştırıyor
       necessaryClaims.forEach((necessaryClaim) => {
         if (ownedClaim === 'admin' || ownedClaim === necessaryClaim) {
           isUserHaveClaim = true;

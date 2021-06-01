@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
         [HttpPost("confirmaddmoney")]
         public IActionResult ConfirmAddMoney(AddMoneyDto addMoneyDto)
         {
-            var result = _addMoneyService.Confirm(addMoneyDto.AddMoneyId);
+            var result = _addMoneyService.Confirm(addMoneyDto);
             if (result.Success)
             {
                 return Ok(result);

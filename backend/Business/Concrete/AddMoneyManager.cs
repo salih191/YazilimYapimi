@@ -41,16 +41,16 @@ namespace Business.Concrete
 
         [SecuredOperation("")]
         [CacheRemoveAspect("IAddMoneyService.Get")]
-        public IResult Confirm(AddMoney addMoney)//id ile onaylama 
+        public IResult Confirm(AddMoneyDto addMoneyDto)//id ile onaylama 
         {
-            var result = _addMoneyDal.Get(a => a.Id == addMoney.Id);//id üzerinden bilgiler çekiliyor
+            var result = _addMoneyDal.Get(a => a.Id == addMoneyDto.AddMoneyId);//id üzerinden bilgiler çekiliyor
             if (result.Status)
             {
                 return new ErrorResult();
             }
             result.Status = true;//durum onaylandı yapılıyor
             _addMoneyDal.Update(result);
-            _walletService.AddMoney(new Wallet {Amount = addMoney.Amount, UserId = addMoney.UserId});
+            _walletService.AddMoney(new Wallet {Amount = addMoneyDto.Amount, UserId = result.UserId});
             return new SuccessResult("onaylandı");
         }
 

@@ -7,5 +7,6 @@ namespace Entities.DTOs
         public int AddMoneyId { get; set; }
         public decimal Amount { get; set; }
         public string UserName { get; set; }
+        public string CurrencyType { get; set; }
     }
 }

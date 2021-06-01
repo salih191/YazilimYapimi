@@ -43,6 +43,9 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<EfCategoryDal>().As<ICategoryDal>();
             //want
             builder.RegisterType<WantManager>().As<IWantService>();
+            //currency
+            builder.RegisterType<CurrencyManager>().As<ICurrencyService>();
+            builder.RegisterType<EfCurrencyDal>().As<ICurrencyDal>();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

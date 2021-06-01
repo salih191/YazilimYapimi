@@ -53,5 +53,9 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<User>(_userDal.Get(u => u.UserName == userName));
         }
+        public IDataResult<User> GetMuhasabeci()
+        {
+            return new SuccessDataResult<User>(_userDal.GetMuhasabeci());
+        }
     }
 }

@@ -18,13 +18,15 @@ namespace Business.Concrete
         private IOrderDetailService _orderDetailService;
         private IProductService _productService;
         private IWalletService _walletService;
+        private IUserService _userService;
 
-        public OrderManager(IOrderDal orderDal, IProductService productService, IWalletService walletService, IOrderDetailService orderDetailService)
+        public OrderManager(IOrderDal orderDal, IProductService productService, IWalletService walletService, IOrderDetailService orderDetailService, IUserService userService)
         {
             _orderDal = orderDal;
             _productService = productService;
             _walletService = walletService;
             _orderDetailService = orderDetailService;
+            _userService = userService;
         }
 
         [SecuredOperation("kullanıcı")]
@@ -137,7 +139,7 @@ namespace Business.Concrete
                 order.OrderPending = true;
                 _orderDal.Add(order);
             }
-            return new ErrorResult();
+            return new ErrorResult(message:orderDetails.Message);
         }
 
         private IDataResult<List<OrderDetail>> OrderControl(ref Order order, List<Product> products, Wallet customerWallet)
@@ -155,11 +157,16 @@ namespace Business.Concrete
 
                 if (purchased > 0)
                 {
+                    var fiyat = purchased * product.UnitPrice;
                     var supplierWallet = _walletService.GetByUserId(product.SupplierId).Data;
-                    customerWallet.Amount -= purchased * product.UnitPrice;
-                    supplierWallet.Amount += purchased * product.UnitPrice;
+                    var muhasabeci = _userService.GetMuhasabeci().Data;
+                    var muhasabeciWallet = _walletService.GetByUserId(muhasabeci.Id).Data;
+                    customerWallet.Amount -= fiyatartiYuzdebir(fiyat);
+                    muhasabeciWallet.Amount += fiyat / 100;
+                    supplierWallet.Amount += fiyat;
                     _walletService.Update(supplierWallet);
                     _walletService.Update(customerWallet);
+                    _walletService.Update(muhasabeciWallet);
                     product.Quantity -= purchased;
                     _productService.Update(product);
                     orderDetails.Add(new OrderDetail { OrderId = order.Id, ProductId = product.Id, Quantity = purchased, OrderDate = DateTime.Now });
@@ -177,7 +184,7 @@ namespace Business.Concrete
                 return new SuccessDataResult<List<OrderDetail>>(orderDetails);
             }
 
-            return new ErrorDataResult<List<OrderDetail>>();
+            return new ErrorDataResult<List<OrderDetail>>(message:"istek beklemede");
         }
         public IDataResult<List<Order>> GetByCategoryIdPendingOrders(int categoryId)
         {

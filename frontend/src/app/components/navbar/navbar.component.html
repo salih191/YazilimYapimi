@@ -27,6 +27,9 @@
         <li class="nav-item">
           <a class="nav-link btn" data-bs-toggle="modal" data-bs-target="#orderAddModal">Ürün Satın Al</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link btn" data-bs-toggle="modal" data-bs-target="#reportModal">Rapor Oluştur</a>
+        </li>
         <li class="nav-item" *ngIf="admin" class="dropdown">
           <button
           *ngIf="onaylanacakVarmi"
@@ -57,7 +60,7 @@
               <a
                 *ngFor="let wallet of onaybekleyenPara"
                 class="dropdown-item"
-                >üye:{{ wallet.userName }} miktar:{{ (wallet.amount | currency) | replace:'$':'₺'}}
+                >üye:{{ wallet.userName }} miktar:{{ (wallet.amount | currency) | replace:'$':' '}} {{wallet.currencyType}}
                 <span class="badge bg-success btn" (click)="confirmMoney(wallet)">✓</span>
                 <span class="badge bg-danger btn"  (click)="rejectMoney(wallet)">X</span></a
               >
@@ -105,3 +108,4 @@
 <app-money-add></app-money-add>
 <app-order-add></app-order-add>
 <app-product-add></app-product-add>
+<app-report></app-report>

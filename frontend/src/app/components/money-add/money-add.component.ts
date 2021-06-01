@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Currency } from 'src/app/models/currencies/currency';
 import { AuthService } from 'src/app/services/auth.service';
+import { CurrencyService } from 'src/app/services/currency.service';
 import { WalletService } from 'src/app/services/wallet.service';
 
 @Component({
@@ -13,27 +14,34 @@ import { WalletService } from 'src/app/services/wallet.service';
 export class MoneyAddComponent implements OnInit {
 
   moneyAddForm: FormGroup;
+  currencies:Currency[]
   constructor(
     private formBuilder: FormBuilder,
     private walletService: WalletService,
     private toastrService: ToastrService,
     private authService:AuthService,
-    private router:Router
+    private currencyService:CurrencyService
   ) {}
 
   ngOnInit(): void {
     this.createMoneyAddForm();
+    this.currencyService.getCurrency().subscribe(data=>{
+      this.currencies=data.data
+    })
   }
 
   createMoneyAddForm() {
     this.moneyAddForm = this.formBuilder.group({
       amount: ['', Validators.required],
-      userId:Number(this.authService.getUser().id)
+      userId:Number(this.authService.getUser().id),
+      currencyId:['',Validators.required]
     });
   }
   add() {
+    console.log(this.moneyAddForm.value)
     if (this.moneyAddForm.valid) {
       let moneyModel = Object.assign({}, this.moneyAddForm.value);
+      moneyModel.currencyId=Number(moneyModel.currencyId)
       this.walletService.addWallet(moneyModel).subscribe(
         (data) => {
           this.toastrService.success(data.message, 'Başarılı')

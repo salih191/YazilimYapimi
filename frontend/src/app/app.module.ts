@@ -18,6 +18,7 @@ import { ProductAddComponent } from './components/product-add/product-add.compon
 import { ReplacePipe } from './pipes/replace.pipe';
 import { CategoryAddComponent } from './components/category-add/category-add.component';
 import { AuthInterceptor } from './interceptors/auth';
+import { ReportComponent } from './components/report/report.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { AuthInterceptor } from './interceptors/auth';
     OrderAddComponent,
     ProductAddComponent,
     ReplacePipe,
-    CategoryAddComponent
+    CategoryAddComponent,
+    ReportComponent
   ],
   imports: [
     BrowserModule,

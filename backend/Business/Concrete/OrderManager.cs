@@ -29,9 +29,7 @@ namespace Business.Concrete
             _userService = userService;
         }
 
-        [SecuredOperation("kullanıcı")]
-        [ValidationAspect(typeof(OrderValidator))]
-        [CacheRemoveAspect("IOrderService.Get")]
+        
         public IResult OldAdd(Order order)
         {
             var result = _productService.GetByCategoryId(order.CategoryId).Data.OrderBy(p => p.UnitPrice).ToList();//ürünler fiyata göre küçükten büyüğe listeleniyor
@@ -78,7 +76,9 @@ namespace Business.Concrete
             }
             return new ErrorResult("satın alım gerçekleşemedi");
         }
-
+        [SecuredOperation("kullanıcı")]
+        [ValidationAspect(typeof(OrderValidator))]
+        [CacheRemoveAspect("IOrderService.Get")]
         public IResult Update(Order order, List<Product> products)
         {
             var customerWallet = _walletService.GetByUserId(order.CustomerId).Data;
@@ -103,7 +103,9 @@ namespace Business.Concrete
 
             return new ErrorResult();
         }
-
+        [SecuredOperation("kullanıcı")]
+        [ValidationAspect(typeof(OrderValidator))]
+        [CacheRemoveAspect("IOrderService.Get")]
         public IResult Add(Order order)
         {
             var quantity = order.Quantity;
@@ -195,7 +197,7 @@ namespace Business.Concrete
         public IDataResult<List<Order>> GetByReport(ReportInfo reportInfo)
         {
             var result = _orderDal.GetAll(o=>o.CustomerId==reportInfo.UserId
-            &&o.OrderPending==false&&o.OrderDate>reportInfo.StartTime&&o.OrderDate<reportInfo.EndTime);
+            &&o.OrderPending==false&&o.OrderDate>=reportInfo.StartTime&&o.OrderDate<=reportInfo.EndTime);
             return new SuccessDataResult<List<Order>>(result);
         }
 

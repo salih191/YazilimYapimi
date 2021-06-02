@@ -22,7 +22,6 @@ namespace Business.Concrete
         public IResult Report(ReportInfo reportInfo)
         {
             var result = a(reportInfo);
-            string str = "";
             try
             {
                 File.Delete($"wwwroot/csv/{reportInfo.UserId}.csv");

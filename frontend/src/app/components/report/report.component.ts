@@ -15,9 +15,10 @@ export class ReportComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,private reportService:ReportService,private authService:AuthService) { }
   startTime:Date
 
-  userId=this.authService.getUser().id
+  userId:number
   ngOnInit(): void {
     this.createReportForm()
+    this.userId=this.authService.getUser().id
   }
   createReportForm() {
     this.reportForm = this.formBuilder.group({

@@ -46,6 +46,8 @@ namespace Business.DependencyResolvers.Autofac
             //currency
             builder.RegisterType<CurrencyManager>().As<ICurrencyService>();
             builder.RegisterType<EfCurrencyDal>().As<ICurrencyDal>();
+            //report
+            builder.RegisterType<ReportManager>().As<IReportService>();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

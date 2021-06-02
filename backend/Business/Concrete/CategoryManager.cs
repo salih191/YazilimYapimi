@@ -33,5 +33,10 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<Category>>(_categoryDal.GetAll());
         }
+
+        public IDataResult<Category> GetById(int id)
+        {
+            return new SuccessDataResult<Category>(_categoryDal.Get(c => c.Id == id));
+        }
     }
 }

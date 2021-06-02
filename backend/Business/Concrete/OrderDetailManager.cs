@@ -28,5 +28,6 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<OrderDetailsDto>>(_orderDetailDal.getAllDetailsDtos());
         }
+
     }
 }

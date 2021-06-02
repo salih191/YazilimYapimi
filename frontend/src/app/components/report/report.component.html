@@ -28,24 +28,22 @@
                     class="form-control"
                     type="datetime-local"
                     id="Date"
-                    formControlName="startDate"
+                    formControlName="startTime"
                     placeholder="Tarih"
-                    [(ngModel)]="startDate"
-                    [max]="nowDate"
+                    [(ngModel)]="startTime"
+                   
                   />
                 </div>
               </div>
-              <div *ngIf="startDate" class="mb-3">
+              <div *ngIf="startTime" class="mb-3">
                 <label for="unitInStock">Bitiş tarihi</label>
                 <div class="form-group">
                   <input
                     type="datetime-local"
                     id="date"
-                    formControlName="endDate"
+                    formControlName="endTime"
                     class="form-control"
-                    [min]="startDate"
-                    [max]="nowDate"
-                    [(ngModel)]="endDate"
+                    [min]="startTime"                    
                   />
                 </div>
               </div>

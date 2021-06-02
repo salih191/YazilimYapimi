@@ -1,10 +1,10 @@
 ﻿using Core.Utilities.Results;
-using Entities.Abstract;
+using Entities.Concrete;
 
 namespace Business.Abstract
 {
     public interface IReportService
     {
-        IDataResult<IReport> Report();
+        IResult Report(ReportInfo reportInfo);
     }
 }

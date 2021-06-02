@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Core.DataAccess.EntityFramework;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -9,11 +11,11 @@ namespace DataAccess.Concrete
 {
     public class EfOrderDetailDal : EfEntityRepositoryBase<OrderDetail, YazilimYapimiContext>, IOrderDetailDal
     {
-        public List<OrderDetailsDto> getAllDetailsDtos()
+        public List<OrderDetailsDto> getAllDetailsDtos(Expression<Func<OrderDetail, bool>> filter = null)
         {
             using (var context = new YazilimYapimiContext())
             {
-                var result = from orderDetail in context.OrderDetails
+                var result = from orderDetail in filter==null? context.OrderDetails:context.OrderDetails.Where(filter)
                     join Order in context.Orders on orderDetail.OrderId equals Order.Id
                     join product in context.Products on orderDetail.ProductId equals product.Id
                     join category in context.Categories on product.CategoryId equals category.Id

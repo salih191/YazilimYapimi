@@ -8,5 +8,6 @@ namespace Business.Abstract
     {
         IResult Add(Category category);
         IDataResult<List<Category>> GetAll();
+        IDataResult<Category> GetById(int id);
     }
 }

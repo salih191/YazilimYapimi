@@ -9,5 +9,6 @@ namespace Business.Abstract
         IResult Add(Order order);
         IResult Update(Order order,List<Product> products);
         IDataResult<List<Order>> GetByCategoryIdPendingOrders(int categoryId);
+        IDataResult<List<Order>> GetByReport(ReportInfo reportInfo);
     }
 }

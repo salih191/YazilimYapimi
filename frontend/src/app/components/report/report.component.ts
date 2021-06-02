@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ApiUrlHelper } from 'src/app/helpers/apiHelpers';
+import { AuthService } from 'src/app/services/auth.service';
+import { ReportService } from 'src/app/services/report.service';
 
 @Component({
   selector: 'app-report',
@@ -9,26 +12,30 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class ReportComponent implements OnInit {
 
   reportForm:FormGroup
-  constructor(private formBuilder: FormBuilder,) { }
-  startDate:Date
-  endDate:Date
-  nowDate:Date
+  constructor(private formBuilder: FormBuilder,private reportService:ReportService,private authService:AuthService) { }
+  startTime:Date
+
+  userId=this.authService.getUser().id
   ngOnInit(): void {
-    console.log(this.nowDate)
     this.createReportForm()
   }
   createReportForm() {
     this.reportForm = this.formBuilder.group({
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
+      userId:this.userId,
+      startTime: ['', Validators.required],
+      endTime: ['', Validators.required],
     });
   }
   create(){
-    console.log(this.startDate)
     if(this.reportForm.valid){
-     
-      console.log(this.startDate.getDate(),this.nowDate.toString(),this.endDate.getDate)
-     // window.location.href='https://www.gencayyildiz.com/blog/jquery-ile-yonlendirmeredirect-islemi/'
+      let reportModel = Object.assign({}, this.reportForm.value);
+      reportModel.userId=Number(this.userId)
+      console.log(reportModel)
+     this.reportService.report(reportModel).subscribe(data=>{
+      window.location.href=ApiUrlHelper.getUrlWithParameters("report/report.csv",[{key:"id",value:this.userId}])
+     },d2=>{
+       console.log("d2",d2)
+     })
     }
   }
 }

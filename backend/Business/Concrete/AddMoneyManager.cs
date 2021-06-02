@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidations;
 using Core.Aspects.Caching;
 using Core.Aspects.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -41,8 +44,12 @@ namespace Business.Concrete
 
         [SecuredOperation("")]
         [CacheRemoveAspect("IAddMoneyService.Get")]
-        public IResult Confirm(AddMoneyDto addMoneyDto)//id ile onaylama 
+        public async Task<IResult> Confirm(AddMoneyDto addMoneyDto)//id ile onaylama 
         {
+            string adres = "https://api.genelpara.com/embed/doviz.json";
+            var myType = MyTypeBuilder.CompileResultType(new List<Field>() { new Field { FieldName = addMoneyDto.CurrencyType, FieldType = typeof(Money) } });
+            var data = await WebApiHelper.GetMethod(adres, myType);
+            Money money=data.GetType().GetProperty(addMoneyDto.CurrencyType).GetValue(data) as Money;
             var result = _addMoneyDal.Get(a => a.Id == addMoneyDto.AddMoneyId);//id üzerinden bilgiler çekiliyor
             if (result.Status)
             {
@@ -50,7 +57,9 @@ namespace Business.Concrete
             }
             result.Status = true;//durum onaylandı yapılıyor
             _addMoneyDal.Update(result);
-            _walletService.AddMoney(new Wallet {Amount = addMoneyDto.Amount, UserId = result.UserId});
+            var dovizKuru=money == null ? "1":money.Satis;
+            decimal doviz = Convert.ToDecimal(dovizKuru);
+            _walletService.AddMoney(new Wallet {Amount = addMoneyDto.Amount*doviz, UserId = result.UserId});
             return new SuccessResult("onaylandı");
         }
 

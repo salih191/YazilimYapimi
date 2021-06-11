@@ -30,16 +30,11 @@ namespace Business.Concrete
                     {
                         quantity += p.Quantity;
                         matchingProducts.Add(p);
-                        if (quantity >= order.Quantity)
+                        if (quantity > 0)
                         {
                             _orderService.Update(order, matchingProducts);
                         }
                     }
-                }
-
-                if (quantity>0)
-                {
-                    _orderService.Update(order, matchingProducts);
                 }
             }
 

@@ -47,23 +47,22 @@ namespace Business.Concrete
         [CacheRemoveAspect("IAddProductService.Get")]
         public IResult Confirm(AddProductDto addProductDto)
         {
-            var result = _addProductDal.Get(a => a.Id == addProductDto.AddProductId);
+            var result = _addProductDal.Get(a => a.Id == addProductDto.AddProductId);//id üzerinden veritabanından çekiliyor
 
-            if (result.Status)
+            if (result.Status)//zaten onaylı ise hata döndürüyor
             {
                 return new ErrorResult();
             }
-            result.Status = true;
-            var product = _productService.IsThereAnyProduct(result).Data;
-            if (product != null)
+            result.Status = true;//onaylandı olarak işaretleniyor
+            var product = _productService.IsThereAnyProduct(result).Data;//üründen var mı kontrolü
+            if (product != null)//varsa
             {
-                product.Quantity += result.Quantity;
-                _productService.Update(product);
-                //_addProductDal.Update(result);
+                product.Quantity += result.Quantity;//miktarı ekleniyor
+                _productService.Update(product);//ürün güncelleniyor
             }
             else
             {
-                _productService.Add(new Product
+                _productService.Add(new Product//yoksa yeni ürün ekleniyor
                 {
                     Quantity = result.Quantity,
                     UnitPrice = addProductDto.UnitsInPrice,
@@ -71,14 +70,15 @@ namespace Business.Concrete
                     CategoryId = result.CategoryId
                 });
             }
-            _wantService.Want(product);
+            _addProductDal.Update(result);
+            _wantService.Want(product);//yeni ürün eklendiği için want servise gönderiliyor
             return new SuccessResult("onaylandı");
         }
 
 
         [SecuredOperation("")]
         [CacheRemoveAspect("IAddProductService.Get")]
-        public IResult Reject(int addProductId)
+        public IResult Reject(int addProductId)//reddetme
         {
             _addProductDal.Delete(new AddProduct { Id = addProductId });
             return new SuccessResult("reddedildi");

@@ -19,9 +19,9 @@ namespace Business.Concrete
             _categoryService = categoryService;
         }
 
-        public IResult Report(ReportInfo reportInfo)
+        public IResult Report(ReportInfo reportInfo)//raporlama
         {
-            var result = a(reportInfo);
+            var result = GetReport(reportInfo);
             try
             {
                 File.Delete($"wwwroot/csv/{reportInfo.UserId}.csv");
@@ -37,12 +37,11 @@ namespace Business.Concrete
             {
                 Console.WriteLine(e);
             }
-
-            Console.WriteLine(result.Data.GetXml());
+            
             return new ErrorResult();
         }
 
-        private IDataResult<List<Report>> a(ReportInfo reportInfo)
+        private IDataResult<List<Report>> GetReport(ReportInfo reportInfo)
         {
             var result = _orderService.GetByReport(reportInfo).Data;
             var report = new List<Report>();

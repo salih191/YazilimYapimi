@@ -18,22 +18,21 @@ namespace Business.Concrete
 
         public IResult Want(Product product)
         {
-            var result = _orderService.GetByCategoryIdPendingOrders(product.CategoryId).Data;
-            var products = _productService.GetByCategoryId(product.CategoryId).Data;
-            var matchingProducts = new List<Product>();
+            var result = _orderService.GetByCategoryIdPendingOrders(product.CategoryId).Data;//beklemedeki siparişler
+            var products = _productService.GetByCategoryId(product.CategoryId).Data;//uyan ürünler
+            var matchingProducts = new List<Product>();//eşleşen ürünler
             foreach (var order in result)
             {
                 decimal quantity = 0;
                 foreach (var p in products)
                 {
-                    if (order.CustomerId != p.SupplierId && p.UnitPrice == order.UnitPrice)
+                    if (order.CustomerId != p.SupplierId && p.UnitPrice == order.UnitPrice)//kendi ürünü olmayan ve fiyatı eşleşen
                     {
                         quantity += p.Quantity;
                         matchingProducts.Add(p);
                         if (quantity >= order.Quantity)
                         {
                             _orderService.Update(order, matchingProducts);
-                            return new SuccessResult();
                         }
                     }
                 }
@@ -41,11 +40,10 @@ namespace Business.Concrete
                 if (quantity>0)
                 {
                     _orderService.Update(order, matchingProducts);
-                    return new SuccessResult();
                 }
             }
 
-            return new ErrorResult();
+            return new SuccessResult();
         }
     }
 }

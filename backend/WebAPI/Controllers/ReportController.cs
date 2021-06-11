@@ -33,8 +33,15 @@ namespace WebAPI.Controllers
         [HttpGet("report.csv")]
         public IActionResult Report(int id)
         {
-            byte[] byteArray = FileToByteArray($"wwwroot/csv/{id}.csv");
-            return new FileContentResult(byteArray, "application/octet-stream");
+            try
+            {
+                byte[] byteArray = FileToByteArray($"wwwroot/csv/{id}.csv");
+                return new FileContentResult(byteArray, "application/octet-stream");
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
         public byte[] FileToByteArray(string fileName)
         {

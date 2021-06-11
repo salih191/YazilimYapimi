@@ -62,13 +62,14 @@ namespace Business.Concrete
             }
             else
             {
-                _productService.Add(new Product//yoksa yeni ürün ekleniyor
+                product = new Product //yoksa yeni ürün ekleniyor
                 {
                     Quantity = result.Quantity,
                     UnitPrice = addProductDto.UnitsInPrice,
                     SupplierId = result.SupplierId,
                     CategoryId = result.CategoryId
-                });
+                };
+                _productService.Add(product);
             }
             _addProductDal.Update(result);
             _wantService.Want(product);//yeni ürün eklendiği için want servise gönderiliyor

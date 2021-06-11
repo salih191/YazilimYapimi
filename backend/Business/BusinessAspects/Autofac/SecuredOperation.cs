@@ -25,6 +25,7 @@ namespace Business.BusinessAspects.Autofac
 
         protected override void OnBefore(IInvocation invocation)
         {
+            return;
             var roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();
             _httpContextAccessor.HttpContext.User.ClaimRoles();
             foreach (var role in _roles)
